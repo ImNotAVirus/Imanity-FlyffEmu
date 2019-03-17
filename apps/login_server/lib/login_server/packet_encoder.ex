@@ -8,9 +8,16 @@ defmodule LoginServer.PacketEncoder do
   require Logger
 
   @impl true
-  @spec encode(String.t()) :: binary
-  def encode(data) do
-    data
+  @spec encode({non_neg_integer, binary}) :: binary
+  def encode({packet_id, data}) do
+    length = byte_size(data) + 4
+
+    <<
+      0x5E::size(8),
+      length::little-size(32),
+      packet_id::little-size(32),
+      data::binary
+    >>
   end
 
   @impl true

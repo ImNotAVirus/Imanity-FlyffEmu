@@ -22,6 +22,11 @@ defmodule LoginServer.Frontend do
   def handle_connection(socket, transport) do
     client = Client.new(socket, transport)
     Logger.info("New connection: #{client.id}")
+    {:ok, client}
+  end
+
+  @impl true
+  def handle_client_ready(%Client{} = client) do
     send_greetings(client)
     {:ok, client}
   end
@@ -49,18 +54,11 @@ defmodule LoginServer.Frontend do
   # Private functions
   #
 
-  defp send_greetings(%Client{transport: transport, socket: socket}) do
+  defp send_greetings(%Client{} = client) do
     protocol = 0x0000000
     client_id = 0x0000042
-    length = 8
+    packet = <<client_id::little-size(32)>>
 
-    packet = <<
-      0x5E::size(8),
-      length::little-size(32),
-      protocol::little-size(32),
-      client_id::little-size(32)
-    >>
-
-    transport.send(socket, packet)
+    Client.send(client, {protocol, packet})
   end
 end
