@@ -21,7 +21,7 @@ defmodule LoginServer.PacketEncoder do
   end
 
   @impl true
-  @spec decode(binary) :: [binary]
+  @spec decode(binary) :: {non_neg_integer(), binary()}
   def decode(data) do
     <<
       0x5E::size(8),
@@ -38,9 +38,14 @@ defmodule LoginServer.PacketEncoder do
       params::binary-size(real_length)
     >> = rest
 
-    IO.puts("Length: #{inspect(packet_length)}")
+    {packet_type, params}
+  end
+
+  @impl true
+  def post_decode({packet_type, params}, _client) do
     IO.puts("packet_type: #{inspect(packet_type)}")
-    IO.puts("params len: #{inspect(byte_size(params))}")
+    IO.puts("params: #{inspect(params)}")
+
     [packet_type, params]
   end
 end
