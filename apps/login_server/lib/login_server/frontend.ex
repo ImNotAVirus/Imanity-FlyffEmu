@@ -42,7 +42,6 @@ defmodule LoginServer.Frontend do
   @impl true
   def handle_message(%Client{id: id} = client, message) do
     Logger.info("New message from #{id} (len: #{byte_size(message)})")
-    Logger.info("#{inspect(message)}")
     {:ok, client}
   end
 
