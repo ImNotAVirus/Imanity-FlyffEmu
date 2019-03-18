@@ -9,7 +9,9 @@ defmodule LoginServer.Frontend do
     port: 23_000
 
   require Logger
+
   alias ElvenGard.Structures.Client
+  alias LoginServer.Actions.AuthActions
 
   @impl true
   def handle_init(args) do
@@ -27,7 +29,7 @@ defmodule LoginServer.Frontend do
 
   @impl true
   def handle_client_ready(%Client{} = client) do
-    send_greetings(client)
+    AuthActions.send_greetings(client)
     {:ok, client}
   end
 
@@ -48,17 +50,5 @@ defmodule LoginServer.Frontend do
   def handle_error(%Client{id: id} = client, reason) do
     Logger.error("An error occured with client #{id}: #{inspect(reason)}")
     {:ok, client}
-  end
-
-  #
-  # Private functions
-  #
-
-  defp send_greetings(%Client{} = client) do
-    protocol = 0x0000000
-    client_id = 0x0000042
-    packet = <<client_id::little-size(32)>>
-
-    Client.send(client, {protocol, packet})
   end
 end
