@@ -42,10 +42,45 @@ defmodule LoginServer.PacketEncoder do
   end
 
   @impl true
-  def post_decode({packet_type, params}, _client) do
-    IO.puts("packet_type: #{inspect(packet_type)}")
+  def post_decode({packet_type, params}, client) do
+    IO.puts("packet_type (0xFC/252 : CERTIFY): #{inspect(packet_type)}")
     IO.puts("params: #{inspect(params)}")
 
+    args =
+      %{bin: params}
+      |> read_string(:build_date)
+      |> read_string(:username)
+
+    IO.puts("Args: #{inspect(args)}")
+
+    # def error_code(_), do: error_code(:server_error)
+    status_code = :server_error
+    render = LoginServer.Actions.AuthViews.render(:login_error, %{status_code: status_code})
+
+    Client.send(client, render)
+
     [packet_type, params]
+  end
+
+  ## Temp functions
+
+  def read_string(%{bin: bin} = args, name) do
+    <<
+      length::little-size(32),
+      content::binary-size(length),
+      rest::binary
+    >> = bin
+
+    Map.put(%{args | bin: rest}, name, content)
+  end
+
+  def read_string(bin) do
+    <<
+      length::little-size(32),
+      content::binary-size(length),
+      rest::binary
+    >> = bin
+
+    {content, rest}
   end
 end
