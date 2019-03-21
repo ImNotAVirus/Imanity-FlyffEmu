@@ -3,6 +3,8 @@ defmodule LoginServer.Actions.AuthViews do
   Define views (server to client packets) for the authentification part
   """
 
+  alias LoginServer.Types.FlyffString
+
   # TODO: Write ElvenGard `__using__` for views (just add a default render)
   # use ElvenGard.Helpers.Views
 
@@ -42,7 +44,7 @@ defmodule LoginServer.Actions.AuthViews do
     prelude = <<
       0::size(32),
       1::size(8),
-      make_string(username)::binary,
+      FlyffString.encode(username)::binary,
       frontend_cnt::little-size(32)
     >>
 
@@ -73,8 +75,8 @@ defmodule LoginServer.Actions.AuthViews do
     <<
       -1::little-size(32),
       cluster.id::little-size(32),
-      make_string(cluster.name)::binary,
-      make_string(cluster.host)::binary,
+      FlyffString.encode(cluster.name)::binary,
+      FlyffString.encode(cluster.host)::binary,
       0::little-size(32),
       0::little-size(32),
       1::little-size(32),
@@ -95,19 +97,12 @@ defmodule LoginServer.Actions.AuthViews do
     <<
       cluster_id::little-size(32),
       channel.id::little-size(32),
-      make_string(channel.name)::binary,
-      make_string(channel.host)::binary,
+      FlyffString.encode(channel.name)::binary,
+      FlyffString.encode(channel.host)::binary,
       0::little-size(32),
       0::little-size(32),
       1::little-size(32),
       channel.capacity::little-size(32)
     >>
-  end
-
-  ## Temp functions
-
-  @doc false
-  defp make_string(str) do
-    <<byte_size(str)::little-size(32), str::binary>>
   end
 end

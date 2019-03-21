@@ -7,6 +7,8 @@ defmodule LoginServer.PacketEncoder do
 
   require Logger
 
+  alias LoginServer.Types.FlyffString
+
   @impl true
   @spec encode({non_neg_integer, binary}) :: binary
   def encode({packet_id, data}) do
@@ -48,33 +50,11 @@ defmodule LoginServer.PacketEncoder do
 
     args =
       %{bin: params}
-      |> read_string(:build_date)
-      |> read_string(:username)
+      |> FlyffString.put_decode(:build_date)
+      |> FlyffString.put_decode(:username)
 
     LoginServer.Actions.AuthActions.send_channel_list(client, args.username)
 
     [packet_type, params]
-  end
-
-  ## Temp functions
-
-  defp read_string(%{bin: bin} = args, name) do
-    <<
-      length::little-size(32),
-      content::binary-size(length),
-      rest::binary
-    >> = bin
-
-    Map.put(%{args | bin: rest}, name, content)
-  end
-
-  defp read_string(bin) do
-    <<
-      length::little-size(32),
-      content::binary-size(length),
-      rest::binary
-    >> = bin
-
-    {content, rest}
   end
 end
