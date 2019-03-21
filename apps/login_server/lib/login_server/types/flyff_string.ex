@@ -3,7 +3,7 @@ defmodule LoginServer.Types.FlyffString do
   Define a custom type for FlyFF protocol
   """
 
-  # TODO: Soo,, create the Helper.Type behaviour
+  # TODO: Soon, create the Helper.Type behaviour
   # use ElvenGard.Helpers.Types
 
   # impl ElvenGard.Helpers.Types
