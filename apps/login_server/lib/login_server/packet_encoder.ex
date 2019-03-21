@@ -51,20 +51,14 @@ defmodule LoginServer.PacketEncoder do
       |> read_string(:build_date)
       |> read_string(:username)
 
-    IO.puts("Args: #{inspect(args)}")
-
-    # def error_code(_), do: error_code(:server_error)
-    status_code = :server_error
-    render = LoginServer.Actions.AuthViews.render(:login_error, %{status_code: status_code})
-
-    Client.send(client, render)
+    LoginServer.Actions.AuthActions.send_channel_list(client, args.username)
 
     [packet_type, params]
   end
 
   ## Temp functions
 
-  def read_string(%{bin: bin} = args, name) do
+  defp read_string(%{bin: bin} = args, name) do
     <<
       length::little-size(32),
       content::binary-size(length),
@@ -74,7 +68,7 @@ defmodule LoginServer.PacketEncoder do
     Map.put(%{args | bin: rest}, name, content)
   end
 
-  def read_string(bin) do
+  defp read_string(bin) do
     <<
       length::little-size(32),
       content::binary-size(length),
