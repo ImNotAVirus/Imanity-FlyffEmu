@@ -3,10 +3,9 @@ defmodule LoginServer.Actions.AuthViews do
   Define views (server to client packets) for the authentification part
   """
 
-  alias LoginServer.Types.FlyffString
+  use ElvenGard.Helpers.View
 
-  # TODO: Write ElvenGard `__using__` for views (just add a default render)
-  # use ElvenGard.Helpers.Views
+  alias LoginServer.Types.FlyffString
 
   # All errors codes
   @spec error_code(atom) :: 103 | 109 | 119 | 120 | 121 | 122 | 133 | 134 | 135 | 136
