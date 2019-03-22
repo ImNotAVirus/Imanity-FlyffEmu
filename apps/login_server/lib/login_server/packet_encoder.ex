@@ -9,7 +9,7 @@ defmodule LoginServer.PacketEncoder do
 
   alias LoginServer.Types.FlyffString
 
-  @impl true
+  @impl ElvenGard.Helpers.PacketEncoder
   @spec encode({non_neg_integer, binary}) :: binary
   def encode({packet_id, data}) do
     length = byte_size(data) + 4
@@ -22,7 +22,7 @@ defmodule LoginServer.PacketEncoder do
     >>
   end
 
-  @impl true
+  @impl ElvenGard.Helpers.PacketEncoder
   @spec decode(binary) :: {non_neg_integer(), binary()}
   def decode(data) do
     <<
@@ -43,7 +43,7 @@ defmodule LoginServer.PacketEncoder do
     {packet_type, params}
   end
 
-  @impl true
+  @impl ElvenGard.Helpers.PacketEncoder
   def post_decode({packet_type, params}, client) do
     IO.puts("packet_type (0xFC/252 : CERTIFY): #{inspect(packet_type)}")
     IO.puts("params: #{inspect(params)}")
