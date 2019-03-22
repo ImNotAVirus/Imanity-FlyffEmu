@@ -1,6 +1,6 @@
 defmodule LoginServer.Types.FlyffString do
   @moduledoc """
-  Define a custom string for FlyFF protocol
+  Define a custom string type for FlyFF protocol
   """
 
   use ElvenGard.Helpers.Type
