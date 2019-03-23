@@ -6,14 +6,14 @@ defmodule LoginServer.Types.FlyffLong do
   use ElvenGard.Helpers.Type
 
   @impl ElvenGard.Helpers.Type
-  @spec encode(integer) :: bitstring
-  def encode(long) do
+  @spec encode(integer, list) :: bitstring
+  def encode(long, _opts) do
     <<long::little-size(64)>>
   end
 
   @impl ElvenGard.Helpers.Type
-  @spec decode(bitstring) :: {integer, bitstring}
-  def decode(bin) do
+  @spec decode(bitstring, list) :: {integer, bitstring}
+  def decode(bin, _opts) do
     <<
       long::little-size(64),
       rest::binary

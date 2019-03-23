@@ -6,14 +6,14 @@ defmodule LoginServer.Types.FlyffShort do
   use ElvenGard.Helpers.Type
 
   @impl ElvenGard.Helpers.Type
-  @spec encode(integer) :: bitstring
-  def encode(short) do
+  @spec encode(integer, list) :: bitstring
+  def encode(short, _opts) do
     <<short::little-size(16)>>
   end
 
   @impl ElvenGard.Helpers.Type
-  @spec decode(bitstring) :: {integer, bitstring}
-  def decode(bin) do
+  @spec decode(bitstring, list) :: {integer, bitstring}
+  def decode(bin, _opts) do
     <<
       short::little-size(16),
       rest::binary
