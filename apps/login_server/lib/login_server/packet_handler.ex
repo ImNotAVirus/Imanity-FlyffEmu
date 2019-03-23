@@ -5,7 +5,7 @@ defmodule LoginServer.PacketHandler do
 
   use ElvenGard.Helpers.Packet
 
-  alias LoginServer.Types.FlyffString
+  alias LoginServer.Types.{FlyffPadding, FlyffString}
 
   @desc """
   CERTIFY packet
@@ -18,7 +18,7 @@ defmodule LoginServer.PacketHandler do
     field :username, FlyffString
 
     @desc "TODO: Deserialize it later but currently not used"
-    field :unknown, :padding, bytes: :fill
+    field :unknown, FlyffPadding, fill: true
   end
 
   default_packet do
