@@ -43,18 +43,22 @@ defmodule LoginServer.PacketEncoder do
     {packet_type, params}
   end
 
+  #
+  # TODO: Define custom behaviour for binary packets
+  #
+
   @impl ElvenGard.Helpers.PacketEncoder
-  def post_decode({packet_type, params}, client) do
-    IO.puts("packet_type (0xFC/252 : CERTIFY): #{inspect(packet_type)}")
-    IO.puts("params: #{inspect(params)}")
+  def post_decode({0x000000FC, params}, _client) do
+    {build_date, rest1} = FlyffString.decode(params, [])
+    {username, rest2} = FlyffString.decode(rest1, [])
+    {padding, _rest} = ElvenGard.Types.ElvenPadding.decode(rest2, fill: true)
 
-    args =
-      %{bin: params}
-      |> FlyffString.put_decode(:build_date)
-      |> FlyffString.put_decode(:username)
+    params = %{
+      build_date: build_date,
+      username: username,
+      padding: padding
+    }
 
-    LoginServer.Actions.AuthActions.send_channel_list(client, args.username)
-
-    [packet_type, params]
+    {0x000000FC, params}
   end
 end

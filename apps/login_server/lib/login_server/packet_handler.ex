@@ -5,6 +5,7 @@ defmodule LoginServer.PacketHandler do
 
   use ElvenGard.Helpers.Packet
 
+  alias LoginServer.Actions.AuthActions
   alias LoginServer.Types.FlyffString
 
   @desc """
@@ -20,7 +21,7 @@ defmodule LoginServer.PacketHandler do
     @desc "TODO: Deserialize it later but currently not used"
     field :unknown, :padding, fill: true
 
-    resolve fn _a, _b -> :ok end
+    resolve &AuthActions.check_credentials/3
   end
 
   default_packet do
