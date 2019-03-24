@@ -3,11 +3,11 @@ defmodule LoginServer.PacketEncoder do
   Encode and decode a Login packet
   """
 
-  use ElvenGard.Helpers.PacketEncoder
+  use ElvenGard.Helpers.PacketEncoder,
+    model: LoginServer.PacketHandler,
+    mode: :binary
 
   require Logger
-
-  alias LoginServer.Types.FlyffString
 
   @impl ElvenGard.Helpers.PacketEncoder
   @spec encode({non_neg_integer, binary}) :: binary
@@ -41,24 +41,5 @@ defmodule LoginServer.PacketEncoder do
     >> = rest
 
     {packet_type, params}
-  end
-
-  #
-  # TODO: Define custom behaviour for binary packets
-  #
-
-  @impl ElvenGard.Helpers.PacketEncoder
-  def post_decode({0x000000FC, params}, _client) do
-    {build_date, rest1} = FlyffString.decode(params, [])
-    {username, rest2} = FlyffString.decode(rest1, [])
-    {padding, _rest} = ElvenGard.Types.ElvenPadding.decode(rest2, fill: true)
-
-    params = %{
-      build_date: build_date,
-      username: username,
-      padding: padding
-    }
-
-    {0x000000FC, params}
   end
 end
