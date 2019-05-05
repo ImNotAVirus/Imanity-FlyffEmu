@@ -3,13 +3,12 @@ defmodule LoginServer.PacketEncoder do
   Encode and decode a Login packet
   """
 
-  use ElvenGard.Helpers.PacketEncoder,
-    model: LoginServer.PacketHandler,
-    mode: :binary
+  use ElvenGard.PacketEncoder.BinaryEncoder,
+    model: LoginServer.PacketHandler
 
   require Logger
 
-  @impl ElvenGard.Helpers.PacketEncoder
+  @impl true
   @spec encode({non_neg_integer, binary}) :: binary
   def encode({packet_id, data}) do
     length = byte_size(data) + 4
@@ -22,7 +21,7 @@ defmodule LoginServer.PacketEncoder do
     >>
   end
 
-  @impl ElvenGard.Helpers.PacketEncoder
+  @impl true
   @spec decode(binary) :: {non_neg_integer(), binary()}
   def decode(data) do
     <<
